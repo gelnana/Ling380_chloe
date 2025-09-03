@@ -1,2 +1,20 @@
-{ pkgs, lib, config, ... }: { languages.python.enable = true; languages.python.venv.enable = true; languages.python.venv.requirements = pkgs.writeText "requirements.txt" ''jupyter nltk spacy''; enterShell = ''# Verify installationspython -c "import jupyterlab; print('JupyterLab installed.')"python -c "import nltk; print('NLTK installed.')"python -c "import spacy; print('SpaCy installed.')"# Download a default SpaCy model if not already presentif ! python -c "import spacy; spacy.load('en_core_web_sm', disable=['parser', 'ner']) # noqa: F811" 2>/dev/null; then  echo "Downloading en_core_web_sm SpaCy model..."  python -m spacy download en_core_web_smelse  echo "en_core_web_sm SpaCy model already downloaded."fiecho "To start JupyterLab, run: jupyter lab"'';# See full reference at https://devenv.sh/reference/options/}
+{ pkgs, lib, config, ... }: {
+  # https://devenv.sh/packages/
+  packages = [
+    pkgs.python3Packages.jupyter
+    pkgs.python3Packages.nltk
+    pkgs.python3Packages.spacy
+  ];
+
+  # https://devenv.sh/languages/
+  languages.python.enable = true;
+
+  enterShell = ''
+    jupyter --version
+    python -c "import nltk; print('NLTK available')"
+    python -c "import spacy; print('SpaCy available')"
+  '';
+
+  # See full reference at https://devenv.sh/reference/options/
+}
 
